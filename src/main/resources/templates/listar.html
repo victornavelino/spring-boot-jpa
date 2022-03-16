@@ -3,36 +3,44 @@
 <head th:replace="layout/layout :: head"></head>
 <body>
 	<header th:replace="layout/layout :: header"></header>
-	<div class="container">
-		<h1
-			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
-			th:text="${titulo}"></h1>
-		<a class="btn btn-success btn-xs" th:href="@{/form}">Crear Cliente</a>
-		<table class="table table-striped">
-			<thead>
-				<th>Id</th>
-				<th>Nombre</th>
-				<th>Apellido</th>
-				<th>email</th>
-				<th>Fecha</th>
-				<th>Editar</th>
-				<th>Eliminar</th>
-			</thead>
+	<div class="container py-4">
+		<div class="card bg-ligth">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs" th:href="@{/form}">Crear
+						Cliente</a>
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<th>Id</th>
+						<th>Nombre</th>
+						<th>Apellido</th>
+						<th>email</th>
+						<th>Fecha</th>
+						<th>Editar</th>
+						<th>Eliminar</th>
+					</thead>
 
-			<tbody>
-				<tr th:each="cliente: ${clientes}">
-					<td th:text="${cliente.id}"></td>
-					<td th:text="${cliente.nombre}"></td>
-					<td th:text="${cliente.apellido}"></td>
-					<td th:text="${cliente.email}"></td>
-					<td th:text="${cliente.createAt}"></td>
-					<td><a class="btn btn-primary btn-xs" th:href="@{/form/}+${cliente.id}" th:text="Editar"></a></td>
-					<td><a class="btn btn-danger btn-xs" th:href="@{/eliminar/}+${cliente.id}" th:text="Eliminar" onclick="return confirm('Esta seguro que desea eliminar?');"></a></td>
-				</tr>
+					<tbody>
+						<tr th:each="cliente: ${clientes}">
+							<td th:text="${cliente.id}"></td>
+							<td th:text="${cliente.nombre}"></td>
+							<td th:text="${cliente.apellido}"></td>
+							<td th:text="${cliente.email}"></td>
+							<td th:text="${cliente.createAt}"></td>
+							<td><a class="btn btn-primary btn-xs"
+								th:href="@{/form/}+${cliente.id}" th:text="Editar"></a></td>
+							<td><a class="btn btn-danger btn-xs"
+								th:href="@{/eliminar/}+${cliente.id}" th:text="Eliminar"
+								onclick="return confirm('Esta seguro que desea eliminar?');"></a></td>
+						</tr>
 
-			</tbody>
-		</table>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
-<footer th:replace="layout/layout :: footer"></footer>
+	<footer th:replace="layout/layout :: footer"></footer>
 </body>
 </html>
