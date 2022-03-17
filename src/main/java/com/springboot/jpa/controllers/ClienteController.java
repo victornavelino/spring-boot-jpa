@@ -46,9 +46,10 @@ public class ClienteController {
 			model.addAttribute("titulo", "Formulario de Cliente");
 			return "form";			
 		}
+		String mensajeFlash = (cliente.getId()!=null)? "Cliente Editado Con Exito!": "Cliente Creado con Exito!";
 		clienteService.save(cliente);
 		status.setComplete();
-		flash.addFlashAttribute("success", "Cliente Creado Con Exito");
+		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:listar";
 	}
 	
@@ -58,7 +59,7 @@ public class ClienteController {
 		if (id > 0) {
 			cliente=clienteService.findOne(id);
 		} else {
-			flash.addFlashAttribute("error", "Cliente no encontrado");
+			flash.addFlashAttribute("error", "El ID de Cliente no encontrado");
 			return "redirect:/listar";
 		}
 		model.put("cliente", cliente);
