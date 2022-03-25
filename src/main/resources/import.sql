@@ -18,9 +18,9 @@ INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Janie', 
 INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Phillip', 'Webb', 'phillip.webb@gmail.com', '2017-08-17', '');
 INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Stephane', 'Nicoll', 'stephane.nicoll@gmail.com', '2017-08-18', '');
 INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Sam', 'Brannen', 'sam.brannen@gmail.com', '2017-08-19', '');  
-INSERT INTO clientes (nombre, apellido, email, create_at) VALUES('Juergen', 'Hoeller', 'juergen.Hoeller@gmail.com', '2017-08-20', ''); 
-INSERT INTO clientes (nombre, apellido, email, create_at) VALUES('Janie', 'Roe', 'janie.roe@gmail.com', '2017-08-21', '');
-INSERT INTO clientes (nombre, apellido, email, create_at) VALUES('John', 'Smith', 'john.smith@gmail.com', '2017-08-22', '');
-INSERT INTO clientes (nombre, apellido, email, create_at) VALUES('Joe', 'Bloggs', 'joe.bloggs@gmail.com', '2017-08-23', '');
-INSERT INTO clientes (nombre, apellido, email, create_at) VALUES('John', 'Stiles', 'john.stiles@gmail.com', '2017-08-24', '');
-INSERT INTO clientes (nombre, apellido, email, create_at) VALUES('Richard', 'Roe', 'stiles.roe@gmail.com', '2017-08-25', '');
+INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Juergen', 'Hoeller', 'juergen.Hoeller@gmail.com', '2017-08-20', ''); 
+INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Janie', 'Roe', 'janie.roe@gmail.com', '2017-08-21', '');
+INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('John', 'Smith', 'john.smith@gmail.com', '2017-08-22', '');
+INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Joe', 'Bloggs', 'joe.bloggs@gmail.com', '2017-08-23', '');
+INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('John', 'Stiles', 'john.stiles@gmail.com', '2017-08-24', '');
+INSERT INTO clientes (nombre, apellido, email, create_at, foto) VALUES('Richard', 'Roe', 'stiles.roe@gmail.com', '2017-08-25', '');
