@@ -73,14 +73,14 @@ public class ClienteController {
 	}
 	
 	@RequestMapping(value="/form", method = RequestMethod.POST)
-	public String guardar(@Valid Cliente cliente, BindingResult result, Model model,@RequestParam("file") MultipartFile foto,  RedirectAttributes flash, SessionStatus status) {
+	public String guardar(@Valid Cliente cliente, BindingResult result, Model model, @RequestParam("file") MultipartFile foto,  RedirectAttributes flash, SessionStatus status) {
 		if(result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Cliente");
 			return "form";			
 		}
 		if(!foto.isEmpty()) {
-			Path directorioRecursos = Paths.get("src//main//resources//static/uploads");
-			String rootPath = directorioRecursos.toFile().getAbsolutePath(); 
+			
+			String rootPath = "C://Temp//uploads"; 
 			
 			try {
 				byte[] bytes = foto.getBytes();
