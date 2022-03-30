@@ -1,6 +1,7 @@
 package com.springboot.jpa.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,21 +40,24 @@ public class Factura implements Serializable {
 	private String observacion;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Cliente cliente;
-	
+
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "factura_id")
 	private List<ItemFactura> items;
-	
+
+	public Factura() {
+		this.items = new ArrayList<ItemFactura>();
+	}
+
 	@PrePersist
 	public void prePersist() {
-		createAt= new Date();
+		createAt = new Date();
 	}
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -62,7 +66,6 @@ public class Factura implements Serializable {
 		this.id = id;
 	}
 
-	
 	public Date getCreateAt() {
 		return createAt;
 	}
@@ -70,8 +73,6 @@ public class Factura implements Serializable {
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
-
-	
 
 	public String getDescripcion() {
 		return descripcion;
@@ -97,14 +98,24 @@ public class Factura implements Serializable {
 		this.cliente = cliente;
 	}
 
-
 	public List<ItemFactura> getItems() {
 		return items;
 	}
 
-
 	public void setItems(List<ItemFactura> items) {
 		this.items = items;
+	}
+
+	public void addItemFactura(ItemFactura item) {
+		this.items.add(item);
+	}
+	
+	public Double getTotal() {
+		Double total =0.0;
+		for(ItemFactura item:this.items) {
+			total += item.calcularImporte();
+		}
+		return total;
 	}
 
 }
