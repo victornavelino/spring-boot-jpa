@@ -18,12 +18,14 @@
 					<li class="list-group-item" th:text="${cliente.createAt}"></li>
 				</ul>
 				<div th:if="${#lists.isEmpty(cliente.facturas)}" class="alert alert-info my-4" th:text="'No hoy facturas realizadas para El cliente '+ ${cliente.nombre} +' '+ ${cliente.apellido}"></div>
-				<table class="table table-bordered table-spriped my-4">
-					<thead>
+				<table class="table table-bordered table-striped table-dark my-4">
+					<thead class="thead-dark">
+					<tr>
 						<th>Folio</th>
-						<th>Descripcin</th>
+						<th>Descripcion</th>
 						<th>Fecha</th>
 						<th>Total</th>
+					</tr>
 					</thead>
 					<tbody>
 					<tr th:each="factura: ${cliente.facturas}">
