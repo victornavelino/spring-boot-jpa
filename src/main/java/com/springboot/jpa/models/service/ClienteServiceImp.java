@@ -9,13 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.jpa.models.dao.IClienteDao;
+import com.springboot.jpa.models.dao.IProductoDao;
 import com.springboot.jpa.models.entity.Cliente;
+import com.springboot.jpa.models.entity.Producto;
 
 @Service
 public class ClienteServiceImp implements IClienteService{
 	
 	@Autowired
 	private IClienteDao clienteDao;
+	
+	@Autowired
+	private IProductoDao productoDao;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -50,6 +55,13 @@ public class ClienteServiceImp implements IClienteService{
 	public Page<Cliente> findAll(Pageable pageable) {
 		
 		return clienteDao.findAll(pageable);
+	} 
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Producto> findByNombre(String term) {
+		// TODO Auto-generated method stub
+		return productoDao.findByNombre(term);
 	}
 
 }
