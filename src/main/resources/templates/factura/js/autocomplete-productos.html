@@ -30,6 +30,7 @@ $(document).ready(function(){
 			linea = linea.replace(/{NOMBRE}/g, ui.item.label);
 			linea = linea.replace(/{PRECIO}/g, ui.item.precio);
 			
+			$("#cargarItemProductos tbody").append(linea);
 			
 			return false;
 		}
