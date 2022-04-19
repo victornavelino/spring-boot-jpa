@@ -61,7 +61,7 @@ public class ClienteServiceImp implements IClienteService{
 	@Transactional(readOnly = true)
 	public List<Producto> findByNombre(String term) {
 		// TODO Auto-generated method stub
-		return productoDao.findByNombreLikeIgnoreCase(term);
+		return productoDao.findByNombreLikeIgnoreCase("%"+term+"%");
 	}
 
 }
