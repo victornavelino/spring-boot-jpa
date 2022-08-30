@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.jpa.models.dao.IClienteDao;
+import com.springboot.jpa.models.dao.IFacturaDao;
 import com.springboot.jpa.models.dao.IProductoDao;
 import com.springboot.jpa.models.entity.Cliente;
+import com.springboot.jpa.models.entity.Factura;
 import com.springboot.jpa.models.entity.Producto;
 
 @Service
@@ -21,6 +23,9 @@ public class ClienteServiceImp implements IClienteService{
 	
 	@Autowired
 	private IProductoDao productoDao;
+	
+	@Autowired
+	private IFacturaDao facturaDao;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -62,6 +67,14 @@ public class ClienteServiceImp implements IClienteService{
 	public List<Producto> findByNombre(String term) {
 		// TODO Auto-generated method stub
 		return productoDao.findByNombreLikeIgnoreCase("%"+term+"%");
+	}
+
+	@Override
+	@Transactional
+	public void saveFactura(Factura factura) {
+		// TODO Auto-generated method stub
+		facturaDao.save(factura);
+		
 	}
 
 }
