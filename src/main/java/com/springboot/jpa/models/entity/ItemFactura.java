@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -23,6 +24,7 @@ public class ItemFactura implements Serializable {
 	private Integer cantidad;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "producto_id")
 	private Producto producto;
 
 	public Long getId() {
@@ -44,4 +46,14 @@ public class ItemFactura implements Serializable {
 	public Double calcularImporte() {
 		return cantidad.doubleValue()*producto.getPrecio();
 	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+	
+	
 }

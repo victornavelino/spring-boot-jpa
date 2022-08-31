@@ -15,6 +15,8 @@ import com.springboot.jpa.models.entity.Cliente;
 import com.springboot.jpa.models.entity.Factura;
 import com.springboot.jpa.models.entity.Producto;
 
+import net.bytebuddy.asm.Advice.OffsetMapping.Target.ForArray.ReadOnly;
+
 @Service
 public class ClienteServiceImp implements IClienteService{
 	
@@ -75,6 +77,13 @@ public class ClienteServiceImp implements IClienteService{
 		// TODO Auto-generated method stub
 		facturaDao.save(factura);
 		
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Producto findProductoById(Long id) {
+		// TODO Auto-generated method stub
+		return productoDao.findById(id).orElse(null);
 	}
 
 }
