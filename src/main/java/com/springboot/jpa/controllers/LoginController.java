@@ -16,7 +16,7 @@ public class LoginController {
 			Model model, Principal principal, RedirectAttributes flash) {
 		if (principal !=null) {
 			flash.addFlashAttribute("info", "El usuario ya se encuentra logueado");
-			return "redirect/";
+			return "redirect:/";
 		}
 		if (error !=null) {
 			model.addAttribute("error", "Error en el login: usuario o contraseña incorrecta");
