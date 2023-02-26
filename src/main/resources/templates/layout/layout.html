@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head2">
 <meta charset="UTF-8" />
 <title th:text="'Spring Boot: MVC + Thymeleaf + Data JPA'"></title>
@@ -18,26 +19,51 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNav">
-					<ul class="navbar-nav">
+					<ul class="navbar-nav mr-auto">
 						<li class="nav-item"><a class="nav-link active"
 							aria-current="page" href="#">Home</a></li>
 						<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
 						</li>
 					</ul>
+					<ul class="navbar-nav navbar-right">
+						<li sec:authorize="!isAuthenticated()"><a
+							class="btn btn-outline-primary" th:href="@{/login}">Iniciar
+								Sesion</a></li>
+						<li sec:authorize="isAuthenticated()" class="dropdown show">
+							<a class="btn btn-outline-primary dropdown-toggle" href="#"
+								role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<span sec:authentication="name"></span> </a>
+
+							<div class="dropdown-menu">
+								<form id="logoutForm" th:action="@{/logout}">
+									<button class="dropdown-item"
+										onclick="document.getElementById('logoutForm').submit();"
+										type="submit">Sign Out</button>
+								</form>
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</nav>
-		<div class="alert alert-success" th:if="${success!=null}" th:text="${success}"></div>
-		<div class="alert alert-danger" th:if="${error!=null}" th:text="${error}"></div>
-		<div class="alert alert-warning" th:if="${warning!=null}" th:text="${warning}"></div>
+		<div class="alert alert-success" th:if="${success!=null}"
+			th:text="${success}"></div>
+		<div class="alert alert-danger" th:if="${error!=null}"
+			th:text="${error}"></div>
+		<div class="alert alert-warning" th:if="${warning!=null}"
+			th:text="${warning}"></div>
 		<div class="alert alert-info" th:if="${info!=null}" th:text="${info}"></div>
 	</header>
 	<div class="container"></div>
 	<footer th:fragment="footer" class="container">
 		<img alt="logo springboot" th:src="@{/images/spring.png}" />
-		<script	th:src="@{/js/jquery-3.6.0.min.js}"></script>
-		<script	th:src="@{/js/popper.min.js}"></script>
-		<script	th:src="@{/js/jquery-ui.min.js}"></script>
+		<p sec:autorize="isAuthenticated()">
+			Usuario Logueado: <span sec:authentication="name"></span> | Roles: XD
+		</p>
+		<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/jquery-ui.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
 	</footer>
 
 
