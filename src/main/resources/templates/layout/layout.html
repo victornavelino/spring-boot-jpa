@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org"
-	xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head2">
 <meta charset="UTF-8" />
 <title th:text="'Spring Boot: MVC + Thymeleaf + Data JPA'"></title>
@@ -25,7 +25,7 @@
 						<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
 						</li>
 					</ul>
-					<ul class="navbar-nav navbar-right">
+					<ul class="navbar-nav">
 						<li sec:authorize="!isAuthenticated()"><a
 							class="btn btn-outline-primary" th:href="@{/login}">Iniciar
 								Sesion</a></li>
@@ -44,6 +44,7 @@
 							</div>
 						</li>
 					</ul>
+
 				</div>
 			</div>
 		</nav>
@@ -58,9 +59,10 @@
 	<div class="container"></div>
 	<footer th:fragment="footer" class="container">
 		<img alt="logo springboot" th:src="@{/images/spring.png}" />
-		<p sec:autorize="isAuthenticated()">
-			Usuario Logueado: <span sec:authentication="name"></span> | Roles: XD
-		</p>
+		<div sec:autorize="isAuthenticated()">
+			Usuario Logueado: <span sec:authentication="name"></span>
+			Roles: 
+		</div>
 		<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
 		<script th:src="@{/js/popper.min.js}"></script>
 		<script th:src="@{/js/jquery-ui.min.js}"></script>

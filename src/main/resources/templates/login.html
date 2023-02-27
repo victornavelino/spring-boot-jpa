@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/layout :: head"></head>
 <body>
 	<header th:replace="layout/layout :: header"></header>
@@ -20,7 +20,7 @@
 					<div class="form-group col-sm-6">
 						<input type="submit" class="btn btn-lg btn-primary btn-block" value="Sign In"/>
 					</div>
-					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					
 
 				</form>
 			</div>
