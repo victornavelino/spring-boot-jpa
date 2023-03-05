@@ -18,9 +18,9 @@
 						<th>Apellido</th>
 						<th>email</th>
 						<th>Fecha</th>
-						<th>Crear Factura</th>
-						<th>Editar</th>
-						<th>Eliminar</th>
+						<th sec:authorize="hasRole('ROLE_ADMIN')">Crear Factura</th>
+						<th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
+						<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
 					</thead>
 
 					<tbody>
