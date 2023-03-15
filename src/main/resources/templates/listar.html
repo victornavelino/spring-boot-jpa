@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head"></head>
 <body>
 	<header th:replace="layout/layout :: header"></header>
@@ -14,10 +14,10 @@
 				<table class="table table-striped">
 					<thead>
 						<th sec:authorize="hasRole('ROLE_USER')">Id</th>
-						<th>Nombre</th>
-						<th>Apellido</th>
-						<th>email</th>
-						<th>Fecha</th>
+						<th th:text="#{text.client.nombre}">Nombre</th>
+						<th th:text="#{text.client.apellido}">Apellido</th>
+						<th th:text="#{text.client.email}">email</th>
+						<th th:text="#{text.client.createAt}">Fecha</th>
 						<th sec:authorize="hasRole('ROLE_ADMIN')">Crear Factura</th>
 						<th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
 						<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
