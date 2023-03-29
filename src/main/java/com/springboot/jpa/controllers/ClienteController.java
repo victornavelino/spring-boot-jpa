@@ -1,4 +1,5 @@
 package com.springboot.jpa.controllers;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
@@ -40,189 +41,194 @@ import com.springboot.jpa.models.entity.Cliente;
 import com.springboot.jpa.models.service.IClienteService;
 import com.springboot.jpa.models.service.IUploadFileService;
 import com.springboot.jpa.util.paginator.PageRender;
+import java.util.Locale;
+import org.springframework.context.MessageSource;
 
 @Controller
 @SessionAttributes("cliente")
 public class ClienteController {
 
-	@Autowired
-	private IClienteService clienteService;
-	
-	@Autowired
-	private IUploadFileService uploadFileService;
-	
-	protected final Log logger = LogFactory.getLog(this.getClass());
-	
-    @Secured("ROLE_USER")
-	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+    @Autowired
+    private IClienteService clienteService;
 
-		Cliente cliente = clienteService.findOne(id);
-		if (cliente == null) {
-			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
-			return "redirect:/listar";
+    @Autowired
+    private IUploadFileService uploadFileService;
 
-		}
-		model.put("cliente", cliente);
-		model.put("titulo", "Detalle del Cliente: " + cliente.getNombre());
-		return "ver";
-	}
+    @Autowired
+    private MessageSource messageSource;
+
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Secured("ROLE_USER")
-	@GetMapping(value = "/uploads/{filename:.+}")
-	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
-		Resource recurso=null;
-		try {
-			recurso = uploadFileService.load(filename);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    @GetMapping(value = "/ver/{id}")
+    public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
-		return ResponseEntity.ok().header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
-				"attachmen; filename=\"" + recurso.getFilename() + "\"").body(recurso);
-	}
+        Cliente cliente = clienteService.findOne(id);
+        if (cliente == null) {
+            flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
+            return "redirect:/listar";
 
-	@RequestMapping(value = { "/listar", "/" }, method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model, 
-			Authentication authentication, HttpServletRequest request) {
+        }
+        model.put("cliente", cliente);
+        model.put("titulo", "Detalle del Cliente: " + cliente.getNombre());
+        return "ver";
+    }
 
-		if(authentication!=null) {
-			logger.info("Hola usuario autenticado, tu username es:".concat(authentication.getName()));
-		}
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		if(auth!=null) {
-			logger.info("Hola usuario autenticado con SecurityContextHolder.getContext().getAuthentication(), "
-					+ "tu username es:".concat(auth.getName()));
-		}
-		// 1--UNA FORMA DE VER EL ROL DEL USUARIO
-		if(hasRole("ROLE_ADMIN")) {
-			logger.info("hola ".concat(auth.getName()).concat(" Tienes acceso!"));
-		}else {
-			logger.info("hola ".concat(auth.getName()).concat(" No Tienes acceso!"));
-		}
-		//2---OTRA FORMA DE VER EL ROL DEL USUARIO
-		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
-		if(securityContext.isUserInRole("ROLE_ADMIN")) {
-			logger.info("Hola Usando SecurityContextHolderAwareRequestWrapper: usuario autenticado, tu username es:"
-					.concat(auth.getName()).concat(" Tienes acceso!"));
-		}else {
-			logger.info("Hola Usando SecurityContextHolderAwareRequestWrapper: usuario autenticado, tu username es:"
-					.concat(auth.getName()).concat(" No Tienes acceso!"));
-		}
-		// 3 --- OTRA FORMA DE VER EL ROL DEL USUARIO
-		if(request.isUserInRole("ROLE_ADMIN")) {
-			logger.info("Hola Usando HttpServletRequest: usuario autenticado, tu username es:"
-					.concat(auth.getName()).concat(" Tienes acceso!"));
-		}else {
-			logger.info("Hola Usando HttpServletRequest: usuario autenticado, tu username es:"
-					.concat(auth.getName()).concat(" No Tienes acceso!"));
-		}
-		//aqui sigue el codigo
-		Pageable pageRequest = PageRequest.of(page, 4);
-		Page<Cliente> clientes = clienteService.findAll(pageRequest);
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/uploads/{filename:.+}")
+    public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
+        Resource recurso = null;
+        try {
+            recurso = uploadFileService.load(filename);
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
-		model.addAttribute("titulo", "Listado de Clientes");
-		model.addAttribute("clientes", clientes);
-		model.addAttribute("page", pageRender);
-		return "listar";
-	}
-    
-	@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/form")
-	public String crear(Map<String, Object> model) {
-		Cliente cliente = new Cliente();
-		model.put("titulo", "Formulario de Cliente");
-		model.put("cliente", cliente);
-		return "form";
-	}
-    
-	@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/form", method = RequestMethod.POST)
-	public String guardar(@Valid Cliente cliente, BindingResult result, Model model,
-			@RequestParam("file") MultipartFile foto, RedirectAttributes flash, SessionStatus status) {
-		if (result.hasErrors()) {
-			model.addAttribute("titulo", "Formulario de Cliente");
-			return "form";
-		}
-		if (!foto.isEmpty()) {
+        return ResponseEntity.ok().header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                "attachmen; filename=\"" + recurso.getFilename() + "\"").body(recurso);
+    }
 
-			if (cliente.getId() != null && cliente.getId() > 0 && cliente.getFoto() != null
-					&& cliente.getFoto().length() > 0) {
-					uploadFileService.delete(cliente.getFoto());
-			}
-			String uniqueFileName =null;
-			try {
-				uniqueFileName = uploadFileService.copy(foto);
-			} catch (IOException e) { 
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			flash.addFlashAttribute("info", "Imagen subida Correctamente " + uniqueFileName);
-			cliente.setFoto(uniqueFileName);
+    @RequestMapping(value = {"/listar", "/"}, method = RequestMethod.GET)
+    public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
+            Authentication authentication, HttpServletRequest request, Locale locale) {
 
-		}
-		String mensajeFlash = (cliente.getId() != null) ? "Cliente Editado Con Exito!" : "Cliente Creado con Exito!";
-		clienteService.save(cliente);
-		status.setComplete();
-		flash.addFlashAttribute("success", mensajeFlash);
-		return "redirect:listar";
-	}
+        if (authentication != null) {
+            logger.info("Hola usuario autenticado, tu username es:".concat(authentication.getName()));
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/form/{id}")
-	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-		Cliente cliente = null;
-		if (id > 0) {
-			cliente = clienteService.findOne(id);
-		} else {
-			flash.addFlashAttribute("error", "El ID de Cliente no encontrado");
-			return "redirect:/listar";
-		}
-		model.put("cliente", cliente);
-		model.put("titulo", "Formulario de Cliente");
-		return "form";
-	}
+        if (auth != null) {
+            logger.info("Hola usuario autenticado con SecurityContextHolder.getContext().getAuthentication(), "
+                    + "tu username es:".concat(auth.getName()));
+        }
+        // 1--UNA FORMA DE VER EL ROL DEL USUARIO
+        if (hasRole("ROLE_ADMIN")) {
+            logger.info("hola ".concat(auth.getName()).concat(" Tienes acceso!"));
+        } else {
+            logger.info("hola ".concat(auth.getName()).concat(" No Tienes acceso!"));
+        }
+        //2---OTRA FORMA DE VER EL ROL DEL USUARIO
+        SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
+        if (securityContext.isUserInRole("ROLE_ADMIN")) {
+            logger.info("Hola Usando SecurityContextHolderAwareRequestWrapper: usuario autenticado, tu username es:"
+                    .concat(auth.getName()).concat(" Tienes acceso!"));
+        } else {
+            logger.info("Hola Usando SecurityContextHolderAwareRequestWrapper: usuario autenticado, tu username es:"
+                    .concat(auth.getName()).concat(" No Tienes acceso!"));
+        }
+        // 3 --- OTRA FORMA DE VER EL ROL DEL USUARIO
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            logger.info("Hola Usando HttpServletRequest: usuario autenticado, tu username es:"
+                    .concat(auth.getName()).concat(" Tienes acceso!"));
+        } else {
+            logger.info("Hola Usando HttpServletRequest: usuario autenticado, tu username es:"
+                    .concat(auth.getName()).concat(" No Tienes acceso!"));
+        }
+        //aqui sigue el codigo
+        Pageable pageRequest = PageRequest.of(page, 4);
+        Page<Cliente> clientes = clienteService.findAll(pageRequest);
 
-	@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/eliminar/{id}")
-	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		if (id > 0) {
-			Cliente cliente = clienteService.findOne(id);
-			clienteService.delete(id);
-			flash.addFlashAttribute("success", "Cliente Eliminado Con Exito");
+        PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
+        model.addAttribute("titulo", messageSource.getMessage("text.cliente.listar.titulo", null, locale));
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("page", pageRender);
+        return "listar";
+    }
 
-				if (uploadFileService.delete(cliente.getFoto())) {
-					flash.addAttribute("info", "Foto: " + cliente.getFoto() + " Eliminada");
-				}
-		}
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/form")
+    public String crear(Map<String, Object> model) {
+        Cliente cliente = new Cliente();
+        model.put("titulo", "Formulario de Cliente");
+        model.put("cliente", cliente);
+        return "form";
+    }
 
-		return "redirect:/listar";
-	}
-	
-	private boolean hasRole(String role) {
-		SecurityContext context = SecurityContextHolder.getContext();
-		
-		if(context ==null) {
-			return false;
-		}
-		Authentication auth = context.getAuthentication();
-		if(auth ==null) {
-			return false;
-		}
-		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-	    System.out.println(authorities);
-	    
-	    return authorities.contains(new SimpleGrantedAuthority(role));
-		/*for(GrantedAuthority authority:authorities) {
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/form", method = RequestMethod.POST)
+    public String guardar(@Valid Cliente cliente, BindingResult result, Model model,
+            @RequestParam("file") MultipartFile foto, RedirectAttributes flash, SessionStatus status) {
+        if (result.hasErrors()) {
+            model.addAttribute("titulo", "Formulario de Cliente");
+            return "form";
+        }
+        if (!foto.isEmpty()) {
+
+            if (cliente.getId() != null && cliente.getId() > 0 && cliente.getFoto() != null
+                    && cliente.getFoto().length() > 0) {
+                uploadFileService.delete(cliente.getFoto());
+            }
+            String uniqueFileName = null;
+            try {
+                uniqueFileName = uploadFileService.copy(foto);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            flash.addFlashAttribute("info", "Imagen subida Correctamente " + uniqueFileName);
+            cliente.setFoto(uniqueFileName);
+
+        }
+        String mensajeFlash = (cliente.getId() != null) ? "Cliente Editado Con Exito!" : "Cliente Creado con Exito!";
+        clienteService.save(cliente);
+        status.setComplete();
+        flash.addFlashAttribute("success", mensajeFlash);
+        return "redirect:listar";
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/form/{id}")
+    public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+        Cliente cliente = null;
+        if (id > 0) {
+            cliente = clienteService.findOne(id);
+        } else {
+            flash.addFlashAttribute("error", "El ID de Cliente no encontrado");
+            return "redirect:/listar";
+        }
+        model.put("cliente", cliente);
+        model.put("titulo", "Formulario de Cliente");
+        return "form";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/eliminar/{id}")
+    public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+        if (id > 0) {
+            Cliente cliente = clienteService.findOne(id);
+            clienteService.delete(id);
+            flash.addFlashAttribute("success", "Cliente Eliminado Con Exito");
+
+            if (uploadFileService.delete(cliente.getFoto())) {
+                flash.addAttribute("info", "Foto: " + cliente.getFoto() + " Eliminada");
+            }
+        }
+
+        return "redirect:/listar";
+    }
+
+    private boolean hasRole(String role) {
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        if (context == null) {
+            return false;
+        }
+        Authentication auth = context.getAuthentication();
+        if (auth == null) {
+            return false;
+        }
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        System.out.println(authorities);
+
+        return authorities.contains(new SimpleGrantedAuthority(role));
+        /*for(GrantedAuthority authority:authorities) {
 			if(role.equals(authority.getAuthority())) {
 				logger.info("hola usuario: ".concat(auth.getName()).concat(" Tu rol es: ").concat(authority.getAuthority()));
 				return true;
 			}
 		}
 		return false;*/
-	}
+    }
 
 }
