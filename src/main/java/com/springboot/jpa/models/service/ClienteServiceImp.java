@@ -15,7 +15,6 @@ import com.springboot.jpa.models.entity.Cliente;
 import com.springboot.jpa.models.entity.Factura;
 import com.springboot.jpa.models.entity.Producto;
 
-import net.bytebuddy.asm.Advice.OffsetMapping.Target.ForArray.ReadOnly;
 
 @Service
 public class ClienteServiceImp implements IClienteService {
@@ -92,4 +91,10 @@ public class ClienteServiceImp implements IClienteService {
         return facturaDao.findById(id).orElse(null);
     }
 
+    @Override
+    @Transactional
+    public void deleteFactura(Long id) {
+        // TODO Auto-generated method stub
+        facturaDao.deleteById(id);
+    }
 }
