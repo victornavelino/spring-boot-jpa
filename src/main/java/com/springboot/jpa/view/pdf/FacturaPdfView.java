@@ -58,14 +58,16 @@ public class FacturaPdfView extends AbstractPdfView {
         document.add(tablaDatosFactura);
 
         PdfPTable tablaItemFactura = new PdfPTable(4);
-        tablaDatosFactura.addCell("Producto");
-        tablaDatosFactura.addCell("Precio");
-        tablaDatosFactura.addCell("Cantidad");
-        tablaDatosFactura.addCell("Total");
+        tablaItemFactura.addCell("Producto");
+        tablaItemFactura.addCell("Precio");
+        tablaItemFactura.addCell("Cantidad");
+        tablaItemFactura.addCell("Total");
 
         for (ItemFactura itemFactura : factura.getItems()) {
             tablaItemFactura.addCell(itemFactura.getProducto().getNombre());
             tablaItemFactura.addCell(itemFactura.getProducto().getPrecio().toString());
+            celda = new PdfPCell(new Phrase(itemFactura.getCantidad().toString()));
+            celda.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
             tablaItemFactura.addCell(itemFactura.getCantidad().toString());
             tablaItemFactura.addCell(itemFactura.calcularImporte().toString());
         }
