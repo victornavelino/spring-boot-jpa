@@ -34,3 +34,4 @@ build/
 
 ### spring boot jpa proyecto ###
 /application.properties
+/nb-configuration.xml
