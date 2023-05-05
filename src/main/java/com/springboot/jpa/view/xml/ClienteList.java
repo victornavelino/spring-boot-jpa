@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author hugo
  */
-@XmlRootElement(name = "clientes")
+@XmlRootElement(name = "clientesList")
 public class ClienteList {
     
     @XmlElement(name = "cliente")

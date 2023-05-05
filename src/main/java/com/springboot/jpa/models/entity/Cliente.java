@@ -1,5 +1,6 @@
 package com.springboot.jpa.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +48,7 @@ public class Cliente implements Serializable {
     private Date createAt;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Factura> facturas;
 
     private String foto;
