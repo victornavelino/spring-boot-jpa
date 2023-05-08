@@ -41,8 +41,10 @@ import com.springboot.jpa.models.entity.Cliente;
 import com.springboot.jpa.models.service.IClienteService;
 import com.springboot.jpa.models.service.IUploadFileService;
 import com.springboot.jpa.util.paginator.PageRender;
+import com.springboot.jpa.view.xml.ClienteList;
 import java.util.Locale;
 import org.springframework.context.MessageSource;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @SessionAttributes("cliente")
@@ -87,6 +89,13 @@ public class ClienteController {
 
         return ResponseEntity.ok().header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
                 "attachmen; filename=\"" + recurso.getFilename() + "\"").body(recurso);
+    }
+
+    @GetMapping(value = "/listar-rest")
+    public @ResponseBody ClienteList listarRest() {
+        
+        return new ClienteList(clienteService.findAll());
+        
     }
 
     @RequestMapping(value = {"/listar", "/"}, method = RequestMethod.GET)
